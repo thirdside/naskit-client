@@ -1,7 +1,6 @@
 #encoding: UTF-8
 require "naskit/version"
 
-require 'choice'
 require 'cgi'
 require 'fileutils'
 require 'net/http'
@@ -71,7 +70,7 @@ module Naskit
         if info['show'] && info['season'] && info['number'] && info['title']
           Episode.parse(info)
         else
-          Logger.err "TVDB::API::AtomicParsley Can't collect enough information for #{file}"
+          Logger.err "Naskit::API::AtomicParsley Can't collect enough information for #{file}"
         end
       end
     end
@@ -95,7 +94,7 @@ module Naskit
           when Net::HTTPRedirection then
             fetch(response['location'])
           else
-            Logger.err "TVDB::API::WWW Can't find episode with #{url}"
+            Logger.err "Naskit::API::WWW Can't find episode with #{url}"
 
             nil
         end
@@ -114,7 +113,7 @@ module Naskit
         if episode = API.get(file)
           copy(file, episode)
         else
-          Logger.err "TVDB::App Can't find episode : #{file}"
+          Logger.err "Naskit::App Can't find episode : #{file}"
         end
       end
     end
@@ -144,7 +143,7 @@ module Naskit
           FileUtils.link(file, dest)
         end
       rescue Errno::EEXIST
-        Logger.err "TVDB::App Destination file already exists : #{dest}"
+        Logger.err "Naskit::App Destination file already exists : #{dest}"
       end
 
       # delete the original file if required
@@ -159,5 +158,3 @@ module Naskit
 
   end
 end
-
-Naskit::App.new(Choice).run

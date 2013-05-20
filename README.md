@@ -1,4 +1,4 @@
-# Naskit::Client
+# Naskit
 
 TODO: Write a gem description
 

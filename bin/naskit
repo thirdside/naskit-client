@@ -1,4 +1,5 @@
-
+require 'naskit'
+require 'choice'
 
 Choice.options do
   header ''
@@ -43,3 +44,5 @@ Choice.options do
     default nil
   end
 end
+
+Naskit::App.new(Choice).run
