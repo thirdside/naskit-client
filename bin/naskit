@@ -1,0 +1,45 @@
+
+
+Choice.options do
+  header ''
+  header 'Specific options:'
+
+  option :source do
+    short '-s'
+    long '--source=SOURCE'
+    desc 'Source folder for all files (default "source")'
+    default 'source'
+  end
+
+  option :destination do
+    short '-d'
+    long '--destination=DESTINATION'
+    desc 'Destination folder for files (default "TV Shows")'
+    default "TV Shows"
+  end
+
+  option :extensions do
+    short '-e'
+    long '--extensions=EXTENSIONS'
+    desc 'File extensions to look for (default "avi,mp4,mkv,m4v")'
+    default "avi,mp4,mkv,m4v"
+  end
+
+  option :format do
+    short '-f'
+    long '--format=FORMAT'
+    desc 'Format episode name (default "%show/%season/%number. %title")'
+    default "%show/%season/%number. %title"
+  end
+
+  option :delete do
+    long '--delete'
+    desc 'Delete the original file'
+  end
+
+  option :profile do
+    long '--profile'
+    desc 'Profile to encode files (m4v)'
+    default nil
+  end
+end
