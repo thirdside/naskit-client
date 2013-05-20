@@ -43,7 +43,8 @@ module Naskit
         if e = klass.get(file)
           return e
         end
-      end; nil
+      end
+      nil
     end
 
     class AtomicParsley
@@ -123,14 +124,14 @@ module Naskit
     end
 
     def copy file, episode
-      dest = "#{@options[:destination]}/" << format(episode, File.extname(file), @options[:format])
+      dest = "#{@options[:destination]}/" << move(episode, File.extname(file), @options[:move])
 
       # create directories, if they do not exist
       FileUtils.mkpath(File.dirname(dest))
 
       # link the file
       begin
-        if @options[:profile]
+        if @options[:convert]
           profile = Naskit::Converter::M4V.new(file, dest)
 
           if profile.matches?
@@ -150,7 +151,7 @@ module Naskit
       FileUtils.remove(file) if @options[:delete_original]
     end
 
-    def format episode, ext, format
+    def move episode, ext, format
       format.gsub(/%show|%season|%number|%title/).each do |match|
         episode.send(match[1..-1])
       end << ext

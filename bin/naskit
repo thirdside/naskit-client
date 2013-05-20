@@ -26,9 +26,9 @@ Choice.options do
     default "avi,mp4,mkv,m4v"
   end
 
-  option :format do
-    short '-f'
-    long '--format=FORMAT'
+  option :move do
+    short '-m'
+    long '--move=FORMAT'
     desc 'Format episode name (default "%show/%season/%number. %title")'
     default "%show/%season/%number. %title"
   end
@@ -38,8 +38,8 @@ Choice.options do
     desc 'Delete the original file'
   end
 
-  option :profile do
-    long '--profile'
+  option :convert do
+    long '--convert'
     desc 'Profile to encode files (m4v)'
     default nil
   end
