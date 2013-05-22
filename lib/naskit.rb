@@ -96,11 +96,11 @@ module Naskit
       def self.fetch(url)
         request = Net::HTTP::Get.new(url)
         request.content_type = "application/json"
-        request.add_field "Content-Type", "application/json"
 
-        uri = URI.parse(url)
-        http = Net::HTTP.new(uri.host, uri.port)
-        response = http.request(request)
+        uri = URI.parse url
+        response = Net::HTTP.start(uri.host, uri.port) {|http|
+          http.request(request)
+        }
 
         case response
           when Net::HTTPSuccess then
