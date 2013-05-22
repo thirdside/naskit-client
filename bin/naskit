@@ -13,14 +13,12 @@ Choice.options do
   end
 
   option :destination do
-    short '-d'
     long '--destination=DESTINATION'
     desc 'Destination folder for files (default "TV Shows")'
     default "TV Shows"
   end
 
   option :extensions do
-    short '-e'
     long '--extensions=EXTENSIONS'
     desc 'File extensions to look for (default "avi,mp4,mkv,m4v")'
     default "avi,mp4,mkv,m4v"
@@ -34,11 +32,13 @@ Choice.options do
   end
 
   option :delete do
+    short '-d'
     long '--delete'
     desc 'Delete the original file'
   end
 
   option :convert do
+    short '-c'
     long '--convert'
     desc 'Profile to encode files (m4v)'
     default nil
