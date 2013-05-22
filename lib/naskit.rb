@@ -11,13 +11,20 @@ require_relative 'naskit/converter'
 
 module Naskit
 
+  DEFAULT_EXTENSIONS  = %w( avi mp4 mkv m4v )
+  DEFAULT_FORMAT      = "%show/%season/%number. %title"
+
   class Logger
+    class << self
+      attr_accessor :verbose
+    end
+
     def self.log message
-      $stdout.puts message
+      $stdout.puts message if verbose
     end
 
     def self.err message
-      $stderr.puts message
+      $stderr.puts message if verbose
     end
   end
 
@@ -81,13 +88,19 @@ module Naskit
       @@url = "http://naskit.thirdside.ca"
 
       def self.get(file)
-        fetch("#{@@url}/search/#{CGI.escape(File.basename(file))}.json")
+        fetch("#{@@url}/search/?q=#{CGI.escape(File.basename(file))}")
       end
 
       protected
 
       def self.fetch(url)
-        response = Net::HTTP.get_response(URI(url))
+        request = Net::HTTP::Get.new(url)
+        request.content_type = "application/json"
+        request.add_field "Content-Type", "application/json"
+
+        uri = URI.parse(url)
+        http = Net::HTTP.new(uri.host, uri.port)
+        response = http.request(request)
 
         case response
           when Net::HTTPSuccess then
@@ -120,11 +133,11 @@ module Naskit
     end
 
     def files
-      @files ||= Dir.glob("#{@options[:source]}/**/*.{#{@options[:extensions]}}")
+      @files ||= Dir.glob("#{@options[:source]}/**/*.{#{@options[:extensions].join(",")}}")
     end
 
     def copy file, episode
-      dest = "#{@options[:destination]}/" << move(episode, File.extname(file), @options[:move])
+      dest = "#{@options[:destination]}/" << move(episode, File.extname(file), @options[:format])
 
       # create directories, if they do not exist
       FileUtils.mkpath(File.dirname(dest))
@@ -148,7 +161,7 @@ module Naskit
       end
 
       # delete the original file if required
-      FileUtils.remove(file) if @options[:delete_original]
+      FileUtils.remove(file) if @options[:delete]
     end
 
     def move episode, ext, format

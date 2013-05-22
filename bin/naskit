@@ -6,7 +6,6 @@ Choice.options do
   header 'Specific options:'
 
   option :source do
-    short '-s'
     long '--source=SOURCE'
     desc 'Source folder for all files (default "source")'
     default 'source'
@@ -21,14 +20,14 @@ Choice.options do
   option :extensions do
     long '--extensions=EXTENSIONS'
     desc 'File extensions to look for (default "avi,mp4,mkv,m4v")'
-    default "avi,mp4,mkv,m4v"
+    filter {|s| s.split(",")}
+    default Naskit::DEFAULT_EXTENSIONS
   end
 
-  option :move do
-    short '-m'
-    long '--move=FORMAT'
+  option :format do
+    long '--format=FORMAT'
     desc 'Format episode name (default "%show/%season/%number. %title")'
-    default "%show/%season/%number. %title"
+    default Naskit::DEFAULT_FORMAT
   end
 
   option :delete do
@@ -42,6 +41,13 @@ Choice.options do
     long '--convert'
     desc 'Profile to encode files (m4v)'
     default nil
+  end
+
+  option :verbose do
+    short '-v'
+    long '--verbose'
+    desc 'Runs in verbose mode'
+    action { Naskit::Logger.verbose = true }
   end
 end
 
