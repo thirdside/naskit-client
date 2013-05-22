@@ -1,4 +1,5 @@
 require File.expand_path('../spec_helper.rb', __FILE__)
+require 'digest'
 
 describe Naskit::API::AtomicParsley do
   describe ".get" do
@@ -41,12 +42,20 @@ describe Naskit::App do
 
 
   context "#run" do
-    before(:all) { subject.run }
-    #after(:all) { FileUtils.rm_r(destination) }
+    before { subject.run }
+    after { FileUtils.rm_r(destination) }
 
     it "creates a destination tree" do
       File.exist?(destination).should be_true
       File.directory?(destination).should be_true
     end
+
+    it "copies the video it doesn't need to transcode" do
+      source_file = File.join(source, "empty.m4v")
+      destination_file = File.join(destination, "Empty videos/1/1. Empty.m4v")
+      Digest::MD5.file(source_file).hexdigest.should == Digest::MD5.file(destination_file).hexdigest
+    end
+
+    it "transcode the mpeg"
   end
 end
