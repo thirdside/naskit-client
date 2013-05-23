@@ -56,6 +56,30 @@ describe Naskit::App do
       Digest::MD5.file(source_file).hexdigest.should == Digest::MD5.file(destination_file).hexdigest
     end
 
-    it "transcode the mpeg"
+    it "transcode the mpeg" do
+      source_file = File.join(source, "How.I.Met.Your.Mother.S01E01.mpeg")
+      destination_file = File.join(destination, "How I Met Your Mother/1/1. Pilot.m4v")
+      File.exist?(destination_file).should be_true
+      Digest::MD5.file(source_file).hexdigest.should_not == Digest::MD5.file(destination_file).hexdigest
+    end
+  end
+end
+
+describe Naskit::Converter::M4V do
+  context "not matching" do
+    subject { Naskit::Converter::M4V.new("titi.mpeg", "toto")}
+
+    its(:match?) { should be_false }
+    its(:command) { should == "avconv -i titi.mpeg -c:a copy -c:v libx264 toto.m4v" }
+  end
+
+  context "matching" do
+    source = File.expand_path("../assets", __FILE__)
+
+    let(:source_file) { File.join(source, "empty.m4v") }
+    subject { Naskit::Converter::M4V.new(source_file, "toto") }
+
+    its(:match?) { should be_true }
+    its(:command) { should == "avconv -i #{Shellwords.escape(source_file)} -c:a copy -c:v copy toto.m4v" }
   end
 end

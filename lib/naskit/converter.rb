@@ -7,8 +7,8 @@ module Naskit
 
     class Profile
       def initialize(infile, outfile)
-        @infile = infile
-        @outfile = outfile
+        @infile = Shellwords.escape infile
+        @outfile = Shellwords.escape outfile
       end
 
       def matches?
@@ -34,12 +34,16 @@ module Naskit
     end
 
     class M4V < Profile
-      def matches?
+      def extension
+        'm4v'
+      end
+
+      def match?
         audio_codec == :copy && video_codec == :copy
       end
 
       def command
-        "avconv -i #{@infile} -c:a #{audio_codec} -c:v #{video_codec} #{@outfile}.m4v"
+        "avconv -i #{@infile} -c:a #{audio_codec} -c:v #{video_codec} #{@outfile}.#{extension}"
       end
 
       def audio_codec
@@ -47,7 +51,7 @@ module Naskit
       end
 
       def video_codec
-        current_codec = file_infos["streams"].detect{|s| s["codec_type"] == "video"}["codec_name"]
+        current_codec = file_infos["streams"].detect{|s| s["codec_type"] == "video"}["codec_name"] rescue nil
         current_codec == "h264" ? :copy : :libx264
       end
     end

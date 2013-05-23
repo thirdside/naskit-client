@@ -136,8 +136,8 @@ module Naskit
       @files ||= Dir.glob("#{@options[:source]}/**/*.{#{@options[:extensions].join(",")}}")
     end
 
-    def copy file, episode
-      dest = "#{@options[:destination]}/" << move(episode, File.extname(file), @options[:format])
+    def copy file, original_file
+      dest = "#{@options[:destination]}/" << converted_name(original_file, @options[:format])
 
       # create directories, if they do not exist
       FileUtils.mkpath(File.dirname(dest))
@@ -147,14 +147,14 @@ module Naskit
         if @options[:convert]
           profile = Naskit::Converter::M4V.new(file, dest)
 
-          if profile.matches?
-            FileUtils.link(file, dest)
+          if profile.match?
+            FileUtils.link(file, dest + ".#{profile.extension}")
           else
             success = profile.convert!
             Logger.err "File not converted: #{file}" unless success
           end
         else
-          FileUtils.link(file, dest)
+          FileUtils.link(file, dest + File.extname(original_file))
         end
       rescue Errno::EEXIST
         Logger.err "Naskit::App Destination file already exists : #{dest}"
@@ -164,10 +164,10 @@ module Naskit
       FileUtils.remove(file) if @options[:delete]
     end
 
-    def move episode, ext, format
+    def converted_name(episode, format)
       format.gsub(/%show|%season|%number|%title/).each do |match|
         episode.send(match[1..-1])
-      end << ext
+      end
     end
 
   end
