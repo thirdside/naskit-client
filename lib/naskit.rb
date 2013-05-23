@@ -95,7 +95,7 @@ module Naskit
 
       def self.fetch(url)
         request = Net::HTTP::Get.new(url)
-        request.content_type = "application/json"
+        request['Accept'] = "application/json"
 
         uri = URI.parse url
         response = Net::HTTP.start(uri.host, uri.port) {|http|
