@@ -123,11 +123,19 @@ module Naskit
     end
 
     def run
+      if failed_destination = @options[:move_failed]
+        FileUtils.mkpath(failed_destination)
+      end
+
       files.each do |file|
         if episode = API.get(file)
           copy(file, episode)
         else
           Logger.err "Naskit::App Can't find episode : #{file}"
+          if failed_destination
+            FileUtils.move(file, failed_destination)
+            Logger.log "Naskit::App Moving failed file #{file} to #{failed_destination}"
+          end
         end
       end
     end

@@ -1,3 +1,4 @@
+# 
 require 'naskit'
 require 'choice'
 
@@ -48,6 +49,12 @@ Choice.options do
     long '--verbose'
     desc 'Runs in verbose mode'
     action { Naskit::Logger.verbose = true }
+  end
+
+  option :move_failed do
+    long '--move-failed=DESTINATION'
+    desc 'Move files that could not be identified to DESTINATION'
+    default nil
   end
 end
 
