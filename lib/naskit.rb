@@ -156,13 +156,13 @@ module Naskit
           profile = Naskit::Converter::M4V.new(file, dest)
 
           if profile.match?
-            FileUtils.link(file, dest + ".#{profile.extension}")
+            FileUtils.move(file, dest + ".#{profile.extension}")
           else
             success = profile.convert!
             Logger.err "File not converted: #{file}" unless success
           end
         else
-          FileUtils.link(file, dest + File.extname(original_file))
+          FileUtils.move(file, dest + File.extname(episode_name))
         end
       rescue Errno::EEXIST
         Logger.err "Naskit::App Destination file already exists : #{dest}"
