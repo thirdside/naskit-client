@@ -177,7 +177,7 @@ module Naskit
 
     def converted_name(episode, format)
       format.gsub(/%show|%season|%number|%title/).each do |match|
-        episode.send(match[1..-1])
+        episode.send(match[1..-1]).to_s.gsub(/\//, "-")
       end
     end
 
