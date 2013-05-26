@@ -1,5 +1,6 @@
 require 'json'
 require 'open3'
+require 'shellwords'
 
 module Naskit
   class Converter
