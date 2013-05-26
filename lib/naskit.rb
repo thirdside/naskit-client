@@ -144,8 +144,8 @@ module Naskit
       @files ||= Dir.glob("#{@options[:source]}/**/*.{#{@options[:extensions].join(",")}}")
     end
 
-    def copy file, original_file
-      dest = "#{@options[:destination]}/" << converted_name(original_file, @options[:format])
+    def copy file, episode_name
+      dest = "#{@options[:destination]}/" << converted_name(episode_name, @options[:format])
 
       # create directories, if they do not exist
       FileUtils.mkpath(File.dirname(dest))
