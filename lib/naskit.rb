@@ -169,7 +169,10 @@ module Naskit
       end
 
       # delete the original file if required
-      FileUtils.remove(file) if @options[:delete]
+      if @options[:delete]
+        FileUtils.remove(file) 
+        Logger.log "Naskit::App Removing file : #{file}"
+      end
     end
 
     def converted_name(episode, format)
