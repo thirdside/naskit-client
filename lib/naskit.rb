@@ -180,8 +180,7 @@ module Naskit
       Naskit::MOVE_STRATEGIES.each do |strategy|
         begin
           FileUtils.send(strategy, source, destination) && return
-        rescue => e
-          puts e
+        rescue
           Naskit::MOVE_STRATEGIES.pop
         end
       end
