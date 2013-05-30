@@ -51,6 +51,13 @@ Choice.options do
     action { Naskit::Logger.verbose = true }
   end
 
+  option :move_strategies do
+    long '--move_strategies=MOVE_STRATEGIES'
+    desc 'Method to use in order to move/copy files (ln, move, copy)'
+    filter {|s| s.split(",")}
+    default Naskit::MOVE_STRATEGIES
+  end
+
   option :move_failed do
     long '--move-failed=DESTINATION'
     desc 'Move files that could not be identified to DESTINATION'

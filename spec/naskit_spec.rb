@@ -51,7 +51,7 @@ describe Naskit::App do
         File.directory?(destination).should be_true
       end
 
-      it "copies the video it doesn't need to transcode" do
+      it "copies the video if it doesn't need to transcode" do
         source_file = File.join(source, "empty.m4v")
         destination_file = File.join(destination, "Empty videos/1/1. Empty.m4v")
         Digest::MD5.file(source_file).hexdigest.should == Digest::MD5.file(destination_file).hexdigest

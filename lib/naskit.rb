@@ -13,6 +13,7 @@ module Naskit
 
   DEFAULT_EXTENSIONS  = %w( avi mp4 mkv m4v )
   DEFAULT_FORMAT      = "%show/%season/%number. %title"
+  MOVE_STRATEGIES     = %W( ln copy move )
 
   class Logger
     class << self
@@ -144,8 +145,8 @@ module Naskit
       @files ||= Dir.glob("#{@options[:source]}/**/*.{#{@options[:extensions].join(",")}}")
     end
 
-    def copy file, episode_name
-      dest = "#{@options[:destination]}/" << converted_name(episode_name, @options[:format])
+    def copy(file, episode)
+      dest = "#{@options[:destination]}/" << converted_name(episode, @options[:format])
 
       # create directories, if they do not exist
       FileUtils.mkpath(File.dirname(dest))
@@ -156,13 +157,13 @@ module Naskit
           profile = Naskit::Converter::M4V.new(file, dest)
 
           if profile.match?
-            FileUtils.move(file, dest + ".#{profile.extension}")
+            move(file, dest + ".#{profile.extension}")
           else
             success = profile.convert!
             Logger.err "File not converted: #{file}" unless success
           end
         else
-          FileUtils.move(file, dest + File.extname(episode_name))
+          move(file, dest + File.extname(file))
         end
       rescue Errno::EEXIST
         Logger.err "Naskit::App Destination file already exists : #{dest}"
@@ -172,6 +173,17 @@ module Naskit
       if @options[:delete]
         FileUtils.remove(file) 
         Logger.log "Naskit::App Removing file : #{file}"
+      end
+    end
+
+    def move(source, destination)
+      Naskit::MOVE_STRATEGIES.each do |strategy|
+        begin
+          FileUtils.send(strategy, source, destination) && return
+        rescue => e
+          puts e
+          Naskit::MOVE_STRATEGIES.pop
+        end
       end
     end
 
