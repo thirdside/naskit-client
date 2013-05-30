@@ -1,4 +1,3 @@
-require 'pry'
 require 'naskit'
 require 'webmock/rspec'
 
